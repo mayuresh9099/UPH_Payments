@@ -62,7 +62,7 @@
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-database-oracle</artifactId>
+            <artifactId>flyway-mysql</artifactId>
         </dependency>
   <!--      <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
