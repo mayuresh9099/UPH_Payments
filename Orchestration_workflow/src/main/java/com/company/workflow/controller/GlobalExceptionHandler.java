@@ -27,6 +27,11 @@ public class GlobalExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "Invalid workflow request");
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    ResponseEntity<ApiError> illegalArgument(IllegalArgumentException ex) {
+        return error(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     ResponseEntity<ApiError> unexpected(Exception ex) {
         return error(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected workflow error");

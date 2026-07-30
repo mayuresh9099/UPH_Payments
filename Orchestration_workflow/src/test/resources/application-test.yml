@@ -15,6 +15,10 @@ spring:
     open-in-view: false
   flyway:
     enabled: true
+  security:
+    user:
+      name: testuser
+      password: testpassword
 
 workflow:
   definitions:
@@ -33,3 +37,7 @@ mock:
     notification-success-probability: 1.0
     firco-approved-probability: 1.0
     firco-rejected-probability: 0.0
+
+jwt:
+  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+  expiration-ms: 86400000
