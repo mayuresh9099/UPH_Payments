@@ -28,7 +28,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable) // lgtm[java/spring-disabled-csrf-protection] - Stateless JWT REST API; CSRF protection is not applicable
+                .csrf(AbstractHttpConfigurer::disable) // codeql[java/spring-disabled-csrf-protection] - Stateless JWT REST API; CSRF protection is not applicable
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
