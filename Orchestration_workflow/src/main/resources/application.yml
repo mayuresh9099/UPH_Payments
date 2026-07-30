@@ -2,18 +2,16 @@ spring:
   application:
     name: workflow-orchestration
   datasource:
-    url: jdbc:mysql://localhost:3306/ORCLPDB1
-    username: root
-    password: root@123
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:oracle:thin:@localhost:1521/ORCLPDB1
+    username: payment_user
+    password: payment_pass
+    driver-class-name: oracle.jdbc.OracleDriver
   jpa:
     hibernate:
-      database-platform: org.hibernate.dialect.MySQLDialect
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-        #dialect: org.hibernate.dialect.OracleDialect
+        dialect: org.hibernate.dialect.OracleDialect
     open-in-view: false
   flyway:
     enabled: true
@@ -22,18 +20,12 @@ server:
   port: 9099
 
 workflow:
-  definitions:
-    workflow-payment-processing-workflow:
-      actions:
-        - REQUEST_VALIDATION
-        - FIRCO_SCREENING
-        - PAYMENT_POSTING
-        - ACCOUNTING
-        - NOTIFICATION
+  scheduler:
+    retry-interval-ms: 60000
 
 mock:
   actions:
-    payment-posting-success-probability: 0.75
+    flex-posting-success-probability: 0.75
     accounting-success-probability: 0.9
     notification-success-probability: 0.95
     firco-approved-probability: 0.85

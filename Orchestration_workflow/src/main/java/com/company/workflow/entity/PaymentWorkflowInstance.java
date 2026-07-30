@@ -18,14 +18,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Represents a single running or completed instance of a payment workflow.
+ * <p>
+ * Persisted state ensures the workflow is resumable after an application restart:
+ * the current state and individual action statuses are stored in the database
+ * and can be re-loaded to continue execution.
+ * </p>
+ */
 @Entity
-@Table(name = "workflow_instance")
+@Table(name = "payment_workflow_instance")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkflowInstance {
+public class PaymentWorkflowInstance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,6 +52,14 @@ public class WorkflowInstance {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 50)
     private WorkflowStatus status;
+
+    /**
+     * Tracks how many times this workflow instance has been retried as a whole
+     * (via the retry endpoint or the scheduler).
+     */
+    @Builder.Default
+    @Column(name = "workflow_retry_count", nullable = false)
+    private Integer workflowRetryCount = 0;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

@@ -12,6 +12,13 @@ import org.springframework.statemachine.config.builders.StateMachineConfiguratio
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 
+/**
+ * Spring State Machine configuration for the payment workflow.
+ * <p>
+ * Defines all states, terminal states, and transitions driven by {@link WorkflowEvent}s.
+ * The state machine is created per workflow instance via {@link org.springframework.statemachine.config.StateMachineFactory}.
+ * </p>
+ */
 @Configuration
 @EnableStateMachineFactory
 @RequiredArgsConstructor
@@ -38,24 +45,27 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<Workfl
     @Override
     public void configure(StateMachineTransitionConfigurer<WorkflowState, WorkflowEvent> transitions) throws Exception {
         transitions
+                // PAYMENT_RECEIVED → VALIDATE_PAYMENT
                 .withExternal()
                     .source(WorkflowState.PAYMENT_RECEIVED)
-                    .target(WorkflowState.REQUEST_VALIDATION)
+                    .target(WorkflowState.VALIDATE_PAYMENT)
                     .event(WorkflowEvent.START_PAYMENT)
                 .and()
+                // VALIDATE_PAYMENT transitions
                 .withExternal()
-                    .source(WorkflowState.REQUEST_VALIDATION)
+                    .source(WorkflowState.VALIDATE_PAYMENT)
                     .target(WorkflowState.FIRCO_SCREENING)
-                    .event(WorkflowEvent.REQUEST_VALIDATION_SUCCESS)
+                    .event(WorkflowEvent.VALIDATE_PAYMENT_SUCCESS)
                 .and()
                 .withExternal()
-                    .source(WorkflowState.REQUEST_VALIDATION)
+                    .source(WorkflowState.VALIDATE_PAYMENT)
                     .target(WorkflowState.PAYMENT_FAILED)
-                    .event(WorkflowEvent.REQUEST_VALIDATION_FAILED)
+                    .event(WorkflowEvent.VALIDATE_PAYMENT_FAILED)
                 .and()
+                // FIRCO_SCREENING transitions
                 .withExternal()
                     .source(WorkflowState.FIRCO_SCREENING)
-                    .target(WorkflowState.PAYMENT_POSTING)
+                    .target(WorkflowState.FLEX_POSTING)
                     .event(WorkflowEvent.FIRCO_SCREENING_SUCCESS)
                 .and()
                 .withExternal()
@@ -63,16 +73,18 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<Workfl
                     .target(WorkflowState.PAYMENT_FAILED)
                     .event(WorkflowEvent.FIRCO_SCREENING_FAILED)
                 .and()
+                // FLEX_POSTING transitions
                 .withExternal()
-                    .source(WorkflowState.PAYMENT_POSTING)
+                    .source(WorkflowState.FLEX_POSTING)
                     .target(WorkflowState.ACCOUNTING)
-                    .event(WorkflowEvent.PAYMENT_POSTING_SUCCESS)
+                    .event(WorkflowEvent.FLEX_POSTING_SUCCESS)
                 .and()
                 .withExternal()
-                    .source(WorkflowState.PAYMENT_POSTING)
+                    .source(WorkflowState.FLEX_POSTING)
                     .target(WorkflowState.PAYMENT_FAILED)
-                    .event(WorkflowEvent.PAYMENT_POSTING_FAILED)
+                    .event(WorkflowEvent.FLEX_POSTING_FAILED)
                 .and()
+                // ACCOUNTING transitions
                 .withExternal()
                     .source(WorkflowState.ACCOUNTING)
                     .target(WorkflowState.NOTIFICATION)
@@ -83,6 +95,7 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<Workfl
                     .target(WorkflowState.PAYMENT_FAILED)
                     .event(WorkflowEvent.ACCOUNTING_FAILED)
                 .and()
+                // NOTIFICATION transitions
                 .withExternal()
                     .source(WorkflowState.NOTIFICATION)
                     .target(WorkflowState.PAYMENT_COMPLETED)
@@ -93,9 +106,10 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<Workfl
                     .target(WorkflowState.PAYMENT_FAILED)
                     .event(WorkflowEvent.NOTIFICATION_FAILED)
                 .and()
+                // RETRY self-transitions for each retryable state
                 .withExternal()
-                    .source(WorkflowState.REQUEST_VALIDATION)
-                    .target(WorkflowState.REQUEST_VALIDATION)
+                    .source(WorkflowState.VALIDATE_PAYMENT)
+                    .target(WorkflowState.VALIDATE_PAYMENT)
                     .event(WorkflowEvent.RETRY)
                 .and()
                 .withExternal()
@@ -104,8 +118,8 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<Workfl
                     .event(WorkflowEvent.RETRY)
                 .and()
                 .withExternal()
-                    .source(WorkflowState.PAYMENT_POSTING)
-                    .target(WorkflowState.PAYMENT_POSTING)
+                    .source(WorkflowState.FLEX_POSTING)
+                    .target(WorkflowState.FLEX_POSTING)
                     .event(WorkflowEvent.RETRY)
                 .and()
                 .withExternal()
@@ -118,8 +132,9 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<Workfl
                     .target(WorkflowState.NOTIFICATION)
                     .event(WorkflowEvent.RETRY)
                 .and()
+                // FAIL transitions (retry exhausted)
                 .withExternal()
-                    .source(WorkflowState.REQUEST_VALIDATION)
+                    .source(WorkflowState.VALIDATE_PAYMENT)
                     .target(WorkflowState.PAYMENT_FAILED)
                     .event(WorkflowEvent.FAIL)
                 .and()
@@ -129,7 +144,7 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<Workfl
                     .event(WorkflowEvent.FAIL)
                 .and()
                 .withExternal()
-                    .source(WorkflowState.PAYMENT_POSTING)
+                    .source(WorkflowState.FLEX_POSTING)
                     .target(WorkflowState.PAYMENT_FAILED)
                     .event(WorkflowEvent.FAIL)
                 .and()

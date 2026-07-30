@@ -6,19 +6,27 @@ import java.math.BigDecimal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+/**
+ * Validates mandatory payment fields and business rules locally.
+ * <p>
+ * This action returns a {@link com.company.workflow.action.ActionStatus#BUSINESS_FAILURE}
+ * on validation errors; no retry is performed for business failures.
+ * </p>
+ */
 @Slf4j
 @Component
-public class RequestValidationAction implements WorkflowAction {
+public class ValidatePaymentAction implements WorkflowAction {
 
     @Override
     public String getActionName() {
-        return "REQUEST_VALIDATION";
+        return "VALIDATE_PAYMENT";
     }
 
     @Override
     public ActionResult execute(PaymentContext context) {
-        log.info("paymentId={} transactionId={} action={} event=request_validation_started",
+        log.info("paymentId={} transactionId={} action={} event=validate_payment_started",
                 context.getPaymentId(), context.getTransactionId(), getActionName());
+
         if (isBlank(context.getPaymentId())) {
             return ActionResult.businessFailure("PAYMENT_ID_MISSING", "Payment ID is mandatory");
         }
@@ -34,6 +42,9 @@ public class RequestValidationAction implements WorkflowAction {
         if (context.getAmount() == null || context.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
             return ActionResult.businessFailure("INVALID_AMOUNT", "Amount must be greater than zero");
         }
+
+        log.info("paymentId={} action={} event=validate_payment_passed",
+                context.getPaymentId(), getActionName());
         return ActionResult.success("Payment request validation passed");
     }
 

@@ -19,14 +19,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Audit log of a single action execution within a {@link PaymentWorkflowInstance}.
+ * <p>
+ * One row is created per action per workflow instance at workflow start time with
+ * status {@link WorkflowActionStatus#PENDING}. The status transitions as the action
+ * runs, retries, or fails.
+ * </p>
+ */
 @Entity
-@Table(name = "workflow_action")
+@Table(name = "payment_action_instance")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkflowActionEntity {
+public class PaymentActionInstance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +42,7 @@ public class WorkflowActionEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "workflow_instance_id", nullable = false)
-    private WorkflowInstance workflowInstance;
+    private PaymentWorkflowInstance workflowInstance;
 
     @Column(name = "payment_id", nullable = false, length = 100)
     private String paymentId;
@@ -42,9 +50,11 @@ public class WorkflowActionEntity {
     @Column(name = "action_name", nullable = false, length = 100)
     private String actionName;
 
+    /** The state the state machine is in when this action executes. */
     @Column(name = "state", nullable = false, length = 100)
     private String state;
 
+    /** 1-based ordering matching {@link PaymentWorkflowAction#getActionSequence()}. */
     @Column(name = "action_order", nullable = false)
     private Integer actionOrder;
 
@@ -52,10 +62,11 @@ public class WorkflowActionEntity {
     @Column(name = "status", nullable = false, length = 50)
     private WorkflowActionStatus status;
 
+    /** Number of retry attempts made so far for this action. */
+    @Builder.Default
     @Column(name = "retry_count", nullable = false)
-    private Integer retryCount;
+    private Integer retryCount = 0;
 
-    @Lob
     @Column(name = "error_code", length = 100)
     private String errorCode;
 

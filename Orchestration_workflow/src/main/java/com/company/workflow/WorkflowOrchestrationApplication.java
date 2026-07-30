@@ -1,12 +1,18 @@
 package com.company.workflow;
 
-import com.company.workflow.config.WorkflowDefinitionProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
+/**
+ * Entry point for the Payment Workflow Orchestration Framework.
+ * <p>
+ * Uses Spring Boot, Spring State Machine, Spring Data JPA, and @EnableScheduling
+ * for database-driven retry scheduling.
+ * </p>
+ */
 @SpringBootApplication
-@EnableConfigurationProperties(WorkflowDefinitionProperties.class)
+@EnableScheduling
 public class WorkflowOrchestrationApplication {
 
     public static void main(String[] args) {

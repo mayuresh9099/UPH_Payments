@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:workflow;MODE=Oracle;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
+    url: jdbc:h2:mem:workflow;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -14,22 +14,17 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
     open-in-view: false
   flyway:
-    enabled: true
+    enabled: false
 
 workflow:
-  definitions:
-    PAYMENT:
-      actions:
-        - REQUEST_VALIDATION
-        - FIRCO_SCREENING
-        - PAYMENT_POSTING
-        - ACCOUNTING
-        - NOTIFICATION
+  scheduler:
+    retry-interval-ms: 300000
 
 mock:
   actions:
-    payment-posting-success-probability: 1.0
+    flex-posting-success-probability: 1.0
     accounting-success-probability: 1.0
     notification-success-probability: 1.0
     firco-approved-probability: 1.0
     firco-rejected-probability: 0.0
+
