@@ -1,0 +1,44 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.0)
+
+2026-07-30T15:12:53.959+05:30  INFO 32848 --- [workflow-orchestration] [           main] c.c.w.WorkflowOrchestrationApplication   : Starting WorkflowOrchestrationApplication v0.0.1-SNAPSHOT using Java 17.0.19 with PID 32848 (D:\Fragma-Mashreq\Orchestration_workflow\target\workflow-orchestration-0.0.1-SNAPSHOT.jar started by techm in D:\Fragma-Mashreq\Orchestration_workflow)
+2026-07-30T15:12:53.965+05:30  INFO 32848 --- [workflow-orchestration] [           main] c.c.w.WorkflowOrchestrationApplication   : The following 1 profile is active: "test"
+2026-07-30T15:12:55.394+05:30  INFO 32848 --- [workflow-orchestration] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-30T15:12:55.553+05:30  INFO 32848 --- [workflow-orchestration] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 146 ms. Found 3 JPA repository interfaces.
+2026-07-30T15:12:56.115+05:30  WARN 32848 --- [workflow-orchestration] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.statemachine.config.configuration.StateMachineAnnotationPostProcessorConfiguration' of type [org.springframework.statemachine.config.configuration.StateMachineAnnotationPostProcessorConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [org.springframework.statemachine.processor.stateMachineAnnotationPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2026-07-30T15:12:56.556+05:30  INFO 32848 --- [workflow-orchestration] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 9099 (http)
+2026-07-30T15:12:56.572+05:30  INFO 32848 --- [workflow-orchestration] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-07-30T15:12:56.573+05:30  INFO 32848 --- [workflow-orchestration] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.14]
+2026-07-30T15:12:56.629+05:30  INFO 32848 --- [workflow-orchestration] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2575 ms
+2026-07-30T15:12:57.158+05:30  INFO 32848 --- [workflow-orchestration] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-07-30T15:12:57.300+05:30  INFO 32848 --- [workflow-orchestration] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 7.1.8.Final
+2026-07-30T15:12:58.461+05:30  INFO 32848 --- [workflow-orchestration] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-30T15:12:58.522+05:30  INFO 32848 --- [workflow-orchestration] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-07-30T15:12:58.909+05:30  INFO 32848 --- [workflow-orchestration] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:workflow user=SA
+2026-07-30T15:12:58.912+05:30  INFO 32848 --- [workflow-orchestration] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-07-30T15:12:58.933+05:30  WARN 32848 --- [workflow-orchestration] [           main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-30T15:12:58.964+05:30  INFO 32848 --- [workflow-orchestration] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:workflow]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: workflow/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DatasourceConnectionProviderImpl
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-07-30T15:13:00.071+05:30  INFO 32848 --- [workflow-orchestration] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-07-30T15:13:00.132+05:30  INFO 32848 --- [workflow-orchestration] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-30T15:13:00.263+05:30  INFO 32848 --- [workflow-orchestration] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-30T15:13:01.581+05:30  INFO 32848 --- [workflow-orchestration] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-07-30T15:13:01.759+05:30  INFO 32848 --- [workflow-orchestration] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 9099 (http) with context path '/'
+2026-07-30T15:13:01.775+05:30  INFO 32848 --- [workflow-orchestration] [           main] c.c.w.WorkflowOrchestrationApplication   : Started WorkflowOrchestrationApplication in 8.576 seconds (process running for 9.378)

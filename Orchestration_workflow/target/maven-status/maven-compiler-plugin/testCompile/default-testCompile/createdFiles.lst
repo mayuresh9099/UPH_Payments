@@ -1,0 +1,4 @@
+com\company\workflow\state\StateMachineTransitionsTest.class
+com\company\workflow\retry\RetryServiceTest.class
+com\company\workflow\service\WorkflowServiceSuccessTest.class
+com\company\workflow\service\WorkflowServiceFailedTest.class
