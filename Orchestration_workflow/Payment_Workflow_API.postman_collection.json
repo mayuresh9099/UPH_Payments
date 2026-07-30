@@ -1,0 +1,108 @@
+{
+  "info": {
+    "name": "Payment Workflow Orchestration API",
+    "description": "Collection for the Payment Workflow Orchestration Framework running on http://localhost:9099",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:9099",
+      "type": "string"
+    },
+    {
+      "key": "workflowId",
+      "value": "1",
+      "type": "string",
+      "description": "Set this to the 'id' returned by the Start Workflow response"
+    }
+  ],
+  "item": [
+    {
+      "name": "Start Payment Workflow",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/payments/workflows/start",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "payments", "workflows", "start"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"workflowName\": \"PAYMENT\",\n  \"businessKey\": \"BIZ-2024-001\",\n  \"paymentId\": \"PAY-001\",\n  \"transactionId\": \"TXN-001\",\n  \"correlationId\": \"COR-001\",\n  \"customerId\": \"CUST-001\",\n  \"sourceAccount\": \"1234567890\",\n  \"destinationAccount\": \"0987654321\",\n  \"currency\": \"USD\",\n  \"amount\": 1500.00,\n  \"paymentType\": \"WIRE_TRANSFER\",\n  \"channel\": \"ONLINE\",\n  \"requestTimestamp\": \"2024-01-15T10:30:00\",\n  \"requestPayload\": {\n    \"reference\": \"INV-2024-001\",\n    \"description\": \"Invoice payment\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Starts a new PAYMENT workflow. Returns the workflow instance with the full action audit trail.\n\nAfter a successful call, copy the 'id' from the response and set the 'workflowId' collection variable."
+      },
+      "response": [
+        {
+          "name": "201 Created – workflow started successfully",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\n  \"id\": 1,\n  \"workflowName\": \"PAYMENT\",\n  \"businessKey\": \"BIZ-2024-001\",\n  \"currentState\": \"PAYMENT_COMPLETED\",\n  \"status\": \"COMPLETED\",\n  \"createdAt\": \"2024-01-15T10:30:00\",\n  \"updatedAt\": \"2024-01-15T10:30:05\",\n  \"actions\": [\n    {\n      \"id\": 1,\n      \"paymentId\": \"PAY-001\",\n      \"actionName\": \"VALIDATE_PAYMENT\",\n      \"state\": \"VALIDATE_PAYMENT\",\n      \"actionOrder\": 1,\n      \"status\": \"COMPLETED\",\n      \"retryCount\": 0,\n      \"errorCode\": null,\n      \"errorMessage\": null,\n      \"startedAt\": \"2024-01-15T10:30:00\",\n      \"completedAt\": \"2024-01-15T10:30:01\"\n    }\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get Workflow Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/payments/workflows/{{workflowId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "payments", "workflows", "{{workflowId}}"]
+        },
+        "description": "Retrieves the current state and full action audit trail for the given workflow instance ID.\n\nReplace {{workflowId}} with the 'id' returned by the Start Workflow call (or set the collection variable)."
+      },
+      "response": [
+        {
+          "name": "200 OK – workflow found",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\n  \"id\": 1,\n  \"workflowName\": \"PAYMENT\",\n  \"businessKey\": \"BIZ-2024-001\",\n  \"currentState\": \"PAYMENT_COMPLETED\",\n  \"status\": \"COMPLETED\",\n  \"createdAt\": \"2024-01-15T10:30:00\",\n  \"updatedAt\": \"2024-01-15T10:30:05\",\n  \"actions\": [\n    {\n      \"id\": 1,\n      \"paymentId\": \"PAY-001\",\n      \"actionName\": \"VALIDATE_PAYMENT\",\n      \"state\": \"VALIDATE_PAYMENT\",\n      \"actionOrder\": 1,\n      \"status\": \"COMPLETED\",\n      \"retryCount\": 0,\n      \"errorCode\": null,\n      \"errorMessage\": null,\n      \"startedAt\": \"2024-01-15T10:30:00\",\n      \"completedAt\": \"2024-01-15T10:30:01\"\n    },\n    {\n      \"id\": 2,\n      \"paymentId\": \"PAY-001\",\n      \"actionName\": \"FIRCO_SCREENING\",\n      \"state\": \"FIRCO_SCREENING\",\n      \"actionOrder\": 2,\n      \"status\": \"COMPLETED\",\n      \"retryCount\": 0,\n      \"errorCode\": null,\n      \"errorMessage\": null,\n      \"startedAt\": \"2024-01-15T10:30:01\",\n      \"completedAt\": \"2024-01-15T10:30:02\"\n    }\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "Retry Failed Workflow",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/payments/workflows/{{workflowId}}/retry",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "payments", "workflows", "{{workflowId}}", "retry"]
+        },
+        "description": "Manually retries a FAILED workflow instance, resuming from the last failed action.\n\nOnly applicable when the workflow status is FAILED. Returns the updated workflow response after retry execution."
+      },
+      "response": [
+        {
+          "name": "200 OK – retry accepted",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\n  \"id\": 1,\n  \"workflowName\": \"PAYMENT\",\n  \"businessKey\": \"BIZ-2024-001\",\n  \"currentState\": \"PAYMENT_COMPLETED\",\n  \"status\": \"COMPLETED\",\n  \"createdAt\": \"2024-01-15T10:30:00\",\n  \"updatedAt\": \"2024-01-15T10:35:00\",\n  \"actions\": []\n}"
+        }
+      ]
+    }
+  ]
+}

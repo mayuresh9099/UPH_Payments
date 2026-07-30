@@ -1,8 +1,8 @@
 package com.company.workflow.listener;
 
-import com.company.workflow.entity.WorkflowInstance;
+import com.company.workflow.entity.PaymentWorkflowInstance;
 import com.company.workflow.entity.WorkflowStatus;
-import com.company.workflow.repository.WorkflowInstanceRepository;
+import com.company.workflow.repository.PaymentWorkflowInstanceRepository;
 import com.company.workflow.state.WorkflowEvent;
 import com.company.workflow.state.WorkflowState;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +13,16 @@ import org.springframework.statemachine.state.State;
 import org.springframework.statemachine.transition.Transition;
 import org.springframework.stereotype.Component;
 
+/**
+ * Listens to Spring State Machine lifecycle events and persists every state
+ * transition to the database, providing a full audit trail for each payment workflow.
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class WorkflowStateMachineListener extends StateMachineListenerAdapter<WorkflowState, WorkflowEvent> {
 
-    private final WorkflowInstanceRepository workflowInstanceRepository;
+    private final PaymentWorkflowInstanceRepository workflowInstanceRepository;
 
     @Override
     public void stateEntered(State<WorkflowState, WorkflowEvent> state) {
@@ -37,7 +41,16 @@ public class WorkflowStateMachineListener extends StateMachineListenerAdapter<Wo
         log.info("sourceState={} targetState={} event=transition_completed", source, target);
     }
 
-    public void persistCurrentState(Long workflowInstanceId, StateMachine<WorkflowState, WorkflowEvent> stateMachine) {
+    /**
+     * Persists the current state machine state to the workflow instance record.
+     *
+     * @param workflowInstanceId the database ID of the running {@link PaymentWorkflowInstance}
+     * @param stateMachine       the state machine whose current state should be persisted
+     */
+    public void persistCurrentState(
+            Long workflowInstanceId,
+            StateMachine<WorkflowState, WorkflowEvent> stateMachine) {
+
         if (workflowInstanceId == null || stateMachine.getState() == null) {
             return;
         }
