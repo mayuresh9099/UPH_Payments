@@ -65,12 +65,24 @@ public class PaymentWorkflowService {
      * Loads the action sequence from the database, creates all action instance records
      * in PENDING state, then executes them in sequence.
      * </p>
+     * <p>
+     * IDEMPOTENT: If a workflow with the same businessKey already exists, returns that
+     * workflow instead of creating a duplicate. This prevents duplicate payments.
+     * </p>
      *
      * @param request the start workflow request containing payment details
      * @return the completed or failed workflow response
      * @throws WorkflowException if the workflow definition is not found or inactive
      */
     public WorkflowResponse startWorkflow(StartWorkflowRequest request) {
+        // CHECK FOR IDEMPOTENCY: Return existing workflow if businessKey already processed
+        var existing = workflowInstanceRepository.findByBusinessKey(request.businessKey());
+        if (existing.isPresent()) {
+            log.warn("businessKey={} event=duplicate_request Returning existing workflow instance: {}",
+                    request.businessKey(), existing.get().getId());
+            return workflowQueryService.getWorkflow(existing.get().getId());
+        }
+
         PaymentWorkflow definition = workflowRepository
                 .findByWorkflowNameAndActiveTrue(request.workflowName())
                 .orElseThrow(() -> new WorkflowException(

@@ -1,24 +1,25 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:workflow;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:mysql://localhost:3306/ORCLPDB1
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root@123
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
-      database-platform: org.hibernate.dialect.H2Dialect
-      ddl-auto: create-drop
+      database-platform: org.hibernate.dialect.MySQLDialect
+      ddl-auto: none
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.MySQLDialect
     open-in-view: false
   flyway:
-    enabled: false
+    enabled: true
+    locations: classpath:db/migration
 
 workflow:
   scheduler:
-    retry-interval-ms: 300000
+    retry-interval-ms: 60000
 
 mock:
   actions:
@@ -27,4 +28,3 @@ mock:
     notification-success-probability: 1.0
     firco-approved-probability: 1.0
     firco-rejected-probability: 0.0
-

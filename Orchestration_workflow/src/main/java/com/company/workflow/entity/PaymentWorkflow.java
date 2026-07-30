@@ -23,7 +23,7 @@ import lombok.Setter;
  * </p>
  */
 @Entity
-@Table(name = "payment_workflow")
+@Table(name = "SELECT * FROM orclpdb1.payment_workflow;")
 @Getter
 @Setter
 @Builder

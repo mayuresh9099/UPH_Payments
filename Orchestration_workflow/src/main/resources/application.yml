@@ -2,19 +2,21 @@ spring:
   application:
     name: workflow-orchestration
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521/ORCLPDB1
-    username: payment_user
-    password: payment_pass
-    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:mysql://localhost:3306/ORCLPDB1
+    username: root
+    password: root@123
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
+      database-platform: org.hibernate.dialect.MySQLDialect
       ddl-auto: none
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.OracleDialect
+        dialect: org.hibernate.dialect.MySQLDialect
     open-in-view: false
   flyway:
     enabled: true
+    locations: classpath:db/migration
 
 server:
   port: 9099
